@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_image.view.*
@@ -19,24 +18,7 @@ import java.net.URL
 import java.util.concurrent.Executors
 
 
-class ListImageAdapter(): RecyclerView.Adapter<ListImageAdapter.ViewHolder>() {
-
-    private var listImage: MutableList<Photo> = mutableListOf()
-    private lateinit var mOnItemListener: OnItemListener
-
-    interface OnItemListener {
-        fun onItemClick(mPos: Int)
-        fun onCheck(photo: Photo,isCheck: Boolean)
-    }
-
-    fun setOnItemClick(onItemListener: OnItemListener) {
-        mOnItemListener = onItemListener
-    }
-
-    fun addData(mlistImage: MutableList<Photo>) {
-        listImage = mlistImage
-        notifyDataSetChanged()
-    }
+class ListImageDetailAdapter(private val listImage: MutableList<Photo>): RecyclerView.Adapter<ListImageDetailAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -46,7 +28,6 @@ class ListImageAdapter(): RecyclerView.Adapter<ListImageAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.txtPhotographer.text = listImage[position].photographer
         val executor = Executors.newSingleThreadExecutor()
         val handler = Handler(Looper.getMainLooper())
         executor.execute {
@@ -60,14 +41,6 @@ class ListImageAdapter(): RecyclerView.Adapter<ListImageAdapter.ViewHolder>() {
             } catch (e: Exception) {
                 Log.e("onBindViewHolder", e.message.toString())
             }
-        }
-
-        holder.itemView.cbCheck.isChecked = false
-
-        holder.itemView.cbCheck.setOnCheckedChangeListener { p0, p1 ->  mOnItemListener.onCheck(listImage[position],p1)}
-
-        holder.itemView.img.setOnClickListener {
-            mOnItemListener.onItemClick(position)
         }
 
     }
